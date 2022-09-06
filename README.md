@@ -1,11 +1,16 @@
 # Lazyhashing
 ## ADK DD2350
 
-# Process:
+# notes:
+
+Ubuntu program for "korpus":
+grep -B 5 " a " textfile.txt
+
+## Process:
 
 Vi har ordet “BARA”
 
-# Steg 1: Hashning
+### Steg 1: Hashning
 
 Vi tar de 3 första bokstäverna, det blir “BAR”. Vi räknar ut vad hashen är för BAR enligt formeln
 (notera att vi konverterar strängen “i” till “i  ”, fyller ut med mellanslag)
@@ -14,7 +19,7 @@ W = “BAR”
 hash(w) = f[w[0]]*900 + f[w[1]]*30 + f[w[2]]
 
 
-# Steg 2: Indexarray A
+### Steg 2: Indexarray A
 
 Input = hashen av “bar”.
 
@@ -30,7 +35,7 @@ Vi får då att A[hash(“BAS”)] har sin första occurrence på index 600]
 Output = 455, 600
 
 
-# Steg 3:
+### Steg 3:
 
 Tabell B är en jättestor tabell som har ALLA bokens ord i bokstavsordning. Vi vet att ordet “BARA” finns på plats 455, och att ordet “BAS” finns på plats 600.
 
