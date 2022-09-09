@@ -5,10 +5,10 @@ import java.io.*;
 public class Konkordans {
     public static void main(String [] args) {
 
-      System.setProperty("file.encoding","ISO_8859_1");
-      Field charset = Charset.class.getDeclaredField("defaultCharset");
-      charset.setAccessible(true);
-      charset.set(null,null);
+      // System.setProperty("file.encoding","ISO_8859_1");
+      // Field charset = Charset.class.getDeclaredField("defaultCharset");
+      // charset.setAccessible(true);
+      // charset.set(null,null);
 
       Helpers helper = new Helpers();
 

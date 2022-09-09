@@ -2,16 +2,29 @@ public class Helpers{
     
 
     public int charToInt(char ch) {
-      if ((int) ch == ' ') {
+
+      
+        System.out.println("char is " + ch);
+
+      if (ch == ' ') {
          return 0;
       }
-      // else if (ch == 'å') {
-      //   return 27;
-      // } else if (ch == 'ä') {
-      //   return 28;
-      // } else if (ch == 'ö') {
-      //   return 29;
-      // }
+
+      if(Character.isLetter(ch)) {
+
+        if ((byte) ch == -27) {
+          System.out.println("char is a with ring");
+          return 27;
+        } else if ((byte) ch == -28) {
+          System.out.println("char is a with two dots");
+          return 28;
+        } else if ((byte)ch == -10) {
+          System.out.println("char is o with dots");
+          return 29;
+        }
+      }
+
+      
       int value = ((int) ch );
       value = value - 96;
       //System.out.println("value: " + value);
