@@ -4,7 +4,7 @@ public class Helpers{
     public int charToInt(char ch) {
 
       
-        System.out.println("char is " + ch);
+        //System.out.println("char is " + ch);
 
       if (ch == ' ') {
          return 0;
@@ -13,13 +13,13 @@ public class Helpers{
       if(Character.isLetter(ch)) {
 
         if ((byte) ch == -27) {
-          System.out.println("char is a with ring");
+          //System.out.println("char is a with ring");
           return 27;
         } else if ((byte) ch == -28) {
-          System.out.println("char is a with two dots");
+          //System.out.println("char is a with two dots");
           return 28;
         } else if ((byte)ch == -10) {
-          System.out.println("char is o with dots");
+          //System.out.println("char is o with dots");
           return 29;
         }
       }
