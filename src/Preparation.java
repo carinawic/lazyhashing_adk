@@ -21,22 +21,14 @@ public class Preparation {
     public static void main(String [ ] args) {
 
         Helpers helper = new Helpers();
-
-        ArrayList<Integer> c = new ArrayList<Integer>();
-        ArrayList<String> b1 = new ArrayList<String>();
-        ArrayList<Integer> b2 = new ArrayList<Integer>();
-
         int[] a = new int[30*30*30];
-        Arrays.fill(a, -1);
-
-
 
         try {
-          
-          RandomAccessFile fileA = new RandomAccessFile("a.txt", "rw");
-          RandomAccessFile fileB1 = new RandomAccessFile("b1.txt", "rw");
-          RandomAccessFile fileB2 = new RandomAccessFile("b2.txt", "rw");
-          RandomAccessFile fileC = new RandomAccessFile("c.txt", "rw");
+            RandomAccessFile fileA = new RandomAccessFile("a.txt", "rw");
+            // RandomAccessFile fileB1 = new RandomAccessFile("b1.txt", "rw");
+            // RandomAccessFile fileB2 = new RandomAccessFile("b2.txt", "rw");
+            RandomAccessFile fileB = new RandomAccessFile("b.txt", "rw");
+            RandomAccessFile fileC = new RandomAccessFile("c.txt", "rw");
 
             File file = new File("rawindex.txt");
             Charset charset = StandardCharsets.ISO_8859_1;
@@ -63,21 +55,18 @@ public class Preparation {
 
                 // om ordet är nytt
                 if (!prevWord.equals(word)){ // we have a new word!!
-                    // lägg in ordet i b1
-                    // b1.add(word);
-                    writeData("b1.txt", word, pointer_in_b);
+                    // Lägg till ordet och motsvarande förekomst i B
+                    fileB.writeChars(word + ' ' + String.valueOf(pointer_in_c) + '\n');
 
-                    // lägg till motsvarande förekomst i b2
-                    // b2.add(pointer_in_c);
-                    writeData("b2.txt", String.valueOf(pointer_in_c), pointer_in_b);
+                    //fileB.getFilePointer(); !!!!!!!
 
                     // fixa a på nåt sätt tror jag
                     //System.out.println("nu ska vi hitta hashen för ordet: "+ word);
                     int hashOfWord = helper.getHash(word);
                     //System.out.println("hashen för det ordet är: "+ hashOfWord);
-                    // a[hashOfWord] = pointer_in_b;
-                    writeData("a.txt", String.valueOf(pointer_in_b), hashOfWord*8);
-                    
+                    a[hashOfWord] = pointer_in_b;
+                    //writeData("a.txt", String.valueOf(pointer_in_b), hashOfWord*8);
+
                     pointer_in_b += 8;
 
 
@@ -87,7 +76,7 @@ public class Preparation {
                 // lägg till förekomst i c
                 // c.add(occurrence);
                 writeData("c.txt", String.valueOf(occurrence), pointer_in_c);
-                
+
                 pointer_in_c += 8;
 
                 prevWord = word;
