@@ -11,17 +11,18 @@ import java.io.IOException;  // Import the IOException class to handle errors
 
 public class Preparation {
 
-  private static void writeData(String filePath, String data, int seek) throws IOException {
-		RandomAccessFile file = new RandomAccessFile(filePath, "rw");
-		file.seek(seek);
-		file.write(data.getBytes());
-		file.close();
-	}
+  // private static void writeData(String filePath, String data, int seek) throws IOException {
+	// 	RandomAccessFile file = new RandomAccessFile(filePath, "rw");
+	// 	file.seek(seek);
+	// 	file.write(data.getBytes());
+	// 	file.close();
+	// }
 
     public static void main(String [ ] args) {
 
         Helpers helper = new Helpers();
-        int[] a = new int[30*30*30];
+        long[] a = new long[30*30*30];
+        Arrays.fill(a, -1);
 
         try {
             RandomAccessFile fileA = new RandomAccessFile("a.txt", "rw");
@@ -38,13 +39,9 @@ public class Preparation {
             BufferedReader br = new BufferedReader(new InputStreamReader(in, charset));
 
             String line;
-            int pointer_in_c = 0;
-            int pointer_in_b = 0;
-
-            int counter = 0;
 
             String prevWord = "";
-            outer: while ((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 //sb.append(line + System.lineSeparator());
                 String[] token = line.split("\\s");
 
@@ -55,38 +52,36 @@ public class Preparation {
 
                 // om ordet är nytt
                 if (!prevWord.equals(word)){ // we have a new word!!
-                    // Lägg till ordet och motsvarande förekomst i B
-                    fileB.writeChars(word + ' ' + String.valueOf(pointer_in_c) + '\n');
-
-                    //fileB.getFilePointer(); !!!!!!!
-
-                    // fixa a på nåt sätt tror jag
+                    // fixa A
                     //System.out.println("nu ska vi hitta hashen för ordet: "+ word);
                     int hashOfWord = helper.getHash(word);
                     //System.out.println("hashen för det ordet är: "+ hashOfWord);
-                    a[hashOfWord] = pointer_in_b;
-                    //writeData("a.txt", String.valueOf(pointer_in_b), hashOfWord*8);
+                    a[hashOfWord] = fileB.getFilePointer();
 
-                    pointer_in_b += 8;
-
-
-
+                    // Lägg till ordet och motsvarande förekomst i B
+                    fileB.writeChars(word + ' ' + String.valueOf(fileC.getFilePointer()) + '\n');
                 }
 
                 // lägg till förekomst i c
-                // c.add(occurrence);
-                writeData("c.txt", String.valueOf(occurrence), pointer_in_c);
-
-                pointer_in_c += 8;
+                fileC.writeChars(String.valueOf(occurrence) + '\n');
 
                 prevWord = word;
-
-                // counter++;
-                // if (counter == 3){
-                //     break outer;
-                //
-                // }
             }
+
+            try
+            {
+                FileOutputStream fos = new FileOutputStream("arrayA");
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                oos.writeObject(a);
+                oos.close();
+                fos.close();
+            }
+            catch (IOException ioe)
+            {
+                ioe.printStackTrace();
+            }
+
+            //fileA.writeChars(a.toString());
 
         } catch (IOException e) {
             e.printStackTrace();

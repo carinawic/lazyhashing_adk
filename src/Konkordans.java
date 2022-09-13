@@ -20,8 +20,8 @@ public class Konkordans {
         return;
       }
 
+      long[] a = retriveAFromFile();
       String completeWord = args[0];
-
       int hashedValue = helper.getHash(completeWord);
       System.out.println("the hashed value of "+ completeWord+ " is " + hashedValue);
 
@@ -89,7 +89,6 @@ public class Konkordans {
 
     private static int getIndexInAIfExists(int hashedValue){
 
-
       try{
         byte[] read_from_a = readCharsFromFile("a.txt", hashedValue*8, 8);
 
@@ -124,5 +123,39 @@ public class Konkordans {
         e.printStackTrace();
       }
       return null;
-	}
+	   }
+
+     private static long[] retriveAFromFile() {
+
+       long[] a = new long[30*30*30];
+
+       try
+        {
+            FileInputStream fis = new FileInputStream("arrayA");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            a = (long[]) ois.readObject();
+
+            ois.close();
+            fis.close();
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+            return null;
+        }
+        catch (ClassNotFoundException c)
+        {
+            System.out.println("Class not found");
+            c.printStackTrace();
+            return null;
+        }
+
+        //Verify list data
+        // for (long value : a) {
+        //     if (value != -1) System.out.println(value);
+        // }
+
+        return a;
+     }
 }
