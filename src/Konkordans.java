@@ -27,7 +27,8 @@ public class Konkordans {
 
       // get the first word hash index
 
-      int index_1_from_a = getIndexInAIfExists(hashedValue);
+      int index_1_from_a = a[hashedValue];
+      // ordet finns tidigast på plats index_1_from_a, om ordet finns
       if (index_1_from_a == -1){
         System.out.println("Ordet " + completeWord + " existerar inte i texten :(");
         return;
@@ -36,11 +37,14 @@ public class Konkordans {
       int index_2_from_a = -1;
       int hashCounter = 1;
       do{
-        index_2_from_a = getIndexInAIfExists(hashedValue+hashCounter);
+        if (hashedValue + hashCounter > a.lenght()) {
+          index_2_from_a = Files.size("b.txt") + 1;  // längden av b + 1
+          break;
+        }
+        index_2_from_a = a[hashedValue + hashCounter];
         hashCounter++;
-        // TODO: make sure we dont reach the end of the file!!
-
-      }while(index_2_from_a == -1);
+      } while(index_2_from_a == -1);
+      // ordet finns innan index_2_from_a, om ordet finns
 
       // binary search between index_1_from_a and index_2_from_a
       System.out.println("binary search between "+index_1_from_a+" and "+index_2_from_a);
@@ -49,11 +53,10 @@ public class Konkordans {
         System.out.println("Ordet " + completeWord + " existerar inte i texten :(");
         return;
       }
-
-
-
     }
 
+    // Hitta ordet 'word' some finns tidigast på plats 'index1' och innan plats 'index2' om den finns.
+    // Om ordet inte finns, retunera '-1'.
     private static int getIndexInB(int index1, int index2, String word) {
       if (index1 > index2) {
         return -1;
@@ -87,30 +90,6 @@ public class Konkordans {
       return -1;
     }
 
-    private static int getIndexInAIfExists(int hashedValue){
-
-      try{
-        byte[] read_from_a = readCharsFromFile("a.txt", hashedValue*8, 8);
-
-        String string_from_a = new String(read_from_a);
-
-        string_from_a = string_from_a.replaceAll("[^0-9]","");
-
-        Pattern p = Pattern.compile("[0-9]");
-        Matcher m = p.matcher(string_from_a);
-        if (m.find()){
-          //System.out.println(new String("MATCH!!!"));
-          return Integer.valueOf(string_from_a);
-        }else{
-          //System.out.println(new String("NO MATCH!!!"));
-          return -1;
-        }
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      return -1;
-    }
-
     private static byte[] readCharsFromFile(String filePath, int seek, int chars) throws IOException {
       try {
         RandomAccessFile file = new RandomAccessFile(filePath, "r");
@@ -125,10 +104,9 @@ public class Konkordans {
       return null;
 	   }
 
+     // Läss in arrayA från fil och retunera arrayen. 
      private static long[] retriveAFromFile() {
-
        long[] a = new long[30*30*30];
-
        try
         {
             FileInputStream fis = new FileInputStream("arrayA");
