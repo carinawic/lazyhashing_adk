@@ -1,6 +1,7 @@
 import java.io.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.io.File; 
 
 //import org.apache.commons.lang3.StringUtils;
 
@@ -27,18 +28,24 @@ public class Konkordans {
 
       // get the first word hash index
 
-      int index_1_from_a = a[hashedValue];
+      long index_1_from_a = a[hashedValue];
       // ordet finns tidigast på plats index_1_from_a, om ordet finns
       if (index_1_from_a == -1){
         System.out.println("Ordet " + completeWord + " existerar inte i texten :(");
         return;
       }
 
-      int index_2_from_a = -1;
+      long index_2_from_a = -1;
       int hashCounter = 1;
+
+
+      File fileB = new File("b.txt");
+
       do{
-        if (hashedValue + hashCounter > a.lenght()) {
-          index_2_from_a = Files.size("b.txt") + 1;  // längden av b + 1
+        if (hashedValue + hashCounter > 30*30*30) {
+
+
+          index_2_from_a = fileB.length()+1;  // längden av b + 1
           break;
         }
         index_2_from_a = a[hashedValue + hashCounter];
@@ -57,40 +64,69 @@ public class Konkordans {
 
     // Hitta ordet 'word' some finns tidigast på plats 'index1' och innan plats 'index2' om den finns.
     // Om ordet inte finns, retunera '-1'.
-    private static int getIndexInB(int index1, int index2, String word) {
+    private static int getIndexInB(long index1, long index2, String word) {
       if (index1 > index2) {
         return -1;
       }
 
-      int mid = (index1/8 + index2/8) / 2;
-      mid = mid*8;
-      byte[] word_at_mid_byte = null;
-      try {
-        word_at_mid_byte = readCharsFromFile("b1.txt", mid, 8);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      String word_at_mid = new String(word_at_mid_byte);
+      long mid = (index1 + index2) / 2;
+      String word_at_mid = "";
+
+      word_at_mid = getWordFromB(mid);
+      //String word_at_mid = new String(word_at_mid_byte);
 
       int compare = word_at_mid.compareTo(word);
       System.out.println("we compare " +word_at_mid+ " to " +word+ " value is: " +compare);
 
-      if (word_at_mid.equals(word)) {
-        // hittat ordet
-        System.out.println("hittat " + word + " pa plats " + mid);
-        return mid;
-      } else if (compare < 0) {
-        System.out.println("ordet " + word + " ar efter " + mid);
-        return getIndexInB(mid+8, index2, word);
-      } else if (compare > 0) {
-        System.out.println("ordet " + word + " ar fore " + mid);
-        return getIndexInB(index1, mid-8, word);
-      }
-      // ska aldrig komma hit.
+      // if (word_at_mid.equals(word)) {
+      //   // hittat ordet
+      //   System.out.println("hittat " + word + " pa plats " + mid);
+      //   return mid;
+      // } else if (compare < 0) {
+      //   System.out.println("ordet " + word + " ar efter " + mid);
+      //   return getIndexInB(mid+8, index2, word);
+      // } else if (compare > 0) {
+      //   System.out.println("ordet " + word + " ar fore " + mid);
+      //   return getIndexInB(index1, mid-8, word);
+      // }
+      // // ska aldrig komma hit.
+      // return -1;
+
       return -1;
     }
 
-    private static byte[] readCharsFromFile(String filePath, int seek, int chars) throws IOException {
+    private static String getWordFromB(long seek) {
+      String word = "";
+      
+      try {
+        RandomAccessFile file = new RandomAccessFile("b.txt", "r");
+        
+        char readChar = ' ';
+        while(readChar != '\n'){
+          file.seek(seek);
+
+          byte[] bytes = new byte[1];
+          file.read(bytes);
+
+          readChar = (char) bytes[0];
+          System.out.println("we chech whether " + readChar + " is a newline symbol");
+          
+          seek ++;
+        }
+        file.close();
+
+        
+        
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      return word;
+	   }
+
+     
+    
+
+    private static byte[] readCharsFromFile(String filePath, long seek, int chars) throws IOException {
       try {
         RandomAccessFile file = new RandomAccessFile(filePath, "r");
         file.seek(seek);
