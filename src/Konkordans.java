@@ -17,15 +17,15 @@ public class Konkordans {
       }
 
       long[] a = retriveAFromFile();
-      String completeWord = args[0];
-      int hashedValue = helper.getHash(completeWord);
-      // System.out.println("the hashed value of "+ completeWord+ " is " + hashedValue);
+      String completerow1 = args[0];
+      int hashedValue = helper.getHash(completerow1);
+      // System.out.println("the hashed value of "+ completerow1+ " is " + hashedValue);
 
-      // get the first word hash index
+      // get the first row1 hash index
       long index_1_from_a = a[hashedValue];
       // ordet finns tidigast på plats index_1_from_a, om ordet finns
       if (index_1_from_a == -1){
-        System.out.println("Ordet " + completeWord + " existerar inte i texten :(");
+        System.out.println("Ordet " + completerow1 + " existerar inte i texten :(");
         return;
       }
 
@@ -44,54 +44,59 @@ public class Konkordans {
       // ordet finns innan index_2_from_a, om ordet finns
 
       // binary search between index_1_from_a and index_2_from_a
-      long index_from_B = getIndexInB(index_1_from_a, index_2_from_a, completeWord);
+      long[] indexes_from_B = getIndexesInB(index_1_from_a, index_2_from_a, completerow1);
       // System.out.println("finshed binary search");
-      if (index_from_B == -1) {
-        System.out.println("Ordet " + completeWord + " existerar inte i texten :(");
+      if (indexes_from_B[0] == -1) {
+        System.out.println("Ordet " + completerow1 + " existerar inte i texten :(");
         return;
       }
-      System.out.println("found the occurrence that corresponds to ."+completeWord+". from B to C ."+index_from_B+".");
+      System.out.println("found the occurrence that corresponds to ."+completerow1+". from B to C ."+indexes_from_B[0]+"." + indexes_from_B[1]);
+
+      // find row1 at index in c
+
+
+
+
+
+
+
     }
 
-    // Hitta ordet 'word' some finns tidigast på plats 'index1' och innan plats 'index2' om den finns.
+
+
+    // Hitta ordet 'row1' some finns tidigast på plats 'index1' och innan plats 'index2' om den finns.
     // Om ordet inte finns, retunera '-1'.
-    private static long getIndexInB(long index1, long index2, String word) {
+    private static long[] getIndexesInB(long index1, long index2, String word) {
       //System.out.println("binary search between "+index1+" and "+index2);
       if (index1 >= index2) {
-        return -1;
+        return null;
       }
 
       long mid = (index1 + index2) / 2;
-      String row_at_mid = "";
-
-      row_at_mid = getRowFromB(mid);
-      // System.out.println("row_at_mid = " + row_at_mid);
-
-      String[] rowitems = row_at_mid.split(" ");
-
-      String word_in_b = rowitems[0];
-      long occurrence = Long.parseLong(rowitems[1]);
-
-      int compare = word_in_b.compareTo(word);
-      // System.out.println("we compare " +row_at_mid+ " to " +word+ " value is: " +compare);
+      String[] rows_at_mid = getRowsFromB(mid);
+      String word1 = rows_at_mid[0].split(" ")[0]; // row [0] before the space
+      int compare = word1.compareTo(word);
 
       if (compare == 0) {
-        // hittat ordet
-        // System.out.println("hittat " + word + " pa plats " + mid);
-        return occurrence;
+        long[] occurrences = new long[2];
+        occurrences[0] = Long.parseLong(rows_at_mid[0].split(" ")[1]); // row [0] after the space
+        occurrences[1] = Long.parseLong(rows_at_mid[1].split(" ")[1]); // row [1] after the space
+      
+        return occurrences;
       } else if (compare < 0) {
-        // System.out.println("ordet " + word + " ar efter " + mid);
-        return getIndexInB(mid+1, index2, word);
+      
+        return getIndexesInB(mid+1, index2, word);
       } else if (compare > 0) {
-        // System.out.println("ordet " + word + " ar fore " + mid);
-        return getIndexInB(index1, mid, word);
+        
+        return getIndexesInB(index1, mid, word);
       }
       // ska aldrig komma hit.
-      return -1;
+      return null;
     }
 
-    private static String getRowFromB(long seek) {
-      String word = "";
+    private static String[] getRowsFromB(long seek) {
+      String row1 = "";
+      String row2 = "";
       try {
         RandomAccessFile file = new RandomAccessFile("b", "r");
         long fileLength = file.length();
@@ -114,12 +119,12 @@ public class Konkordans {
         }
         seek = seek+2;
 
-        // Hitta resten av ordet.
+        // Hitta resten av raden.
 
-        while(true){
+        while(true){ // find row 1
           if (seek > fileLength) {
             System.out.println("Fil B tog slut!");
-            return word;
+            break;
           }
           file.seek(seek);
 
@@ -132,18 +137,42 @@ public class Konkordans {
 
           file.read(bs);
           readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
-          
-          if(readChar == '\n') break;
-          word += readChar;
           seek++;
+          if(readChar == '\n') break;
+          row1 += readChar;
+          
+        }
+
+        while(true){ // find row 2
+          if (seek > fileLength) {
+            System.out.println("Fil B tog slut!");
+            break;
+          }
+          file.seek(seek);
+
+          byte[] bs = new byte[1];
+          file.read(bs);
+          readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
+
+          seek++;
+          file.seek(seek);
+
+          file.read(bs);
+          readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
+          seek++;
+          if(readChar == '\n') break;
+          row2 += readChar;
+          
         }
 
         file.close();
       } catch (IOException e) {
         e.printStackTrace();
       }
-      // System.out.println("Retunerar ordet ."+word+".");
-      return word;
+      // System.out.println("Retunerar ordet ."+row1+".");
+
+      String[] returnRows = {row1, row2};
+      return returnRows;
 	   }
 
     private static byte[] readCharsFromFile(String filePath, long seek, int chars) throws IOException {
