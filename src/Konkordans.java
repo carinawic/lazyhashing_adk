@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-import java.io.File; 
+import java.io.File;
 
 //import org.apache.commons.lang3.StringUtils;
 
@@ -97,34 +97,57 @@ public class Konkordans {
 
     private static String getWordFromB(long seek) {
       String word = "";
-      
       try {
         RandomAccessFile file = new RandomAccessFile("b.txt", "r");
-        
+        long fileLength = file.length();
+
+        // Hitta början av ordet.
         char readChar = ' ';
         while(readChar != '\n'){
+          if (seek < 0) {
+            seek = 0;
+            break;
+          }
           file.seek(seek);
 
           byte[] bytes = new byte[1];
           file.read(bytes);
 
           readChar = (char) bytes[0];
-          System.out.println("we chech whether " + readChar + " is a newline symbol");
-          
-          seek ++;
-        }
-        file.close();
+          //System.out.println("we check whether " + readChar + " is a newline symbol");
 
-        
-        
+          seek--;
+        }
+        seek = seek+2;
+
+        // Hitta resten av ordet.
+        while(true){
+          if (seek > fileLength) {
+            System.out.println("Fil B tog slut!");
+            return word;
+          }
+          file.seek(seek);
+
+          byte[] bytes = new byte[1];
+          file.read(bytes);
+
+          readChar = (char) bytes[0];
+          //System.out.println("Read " + readChar + " from B");
+          if(readChar == ' ') break;
+          word += new String(bytes);
+          seek++;
+        }
+
+        file.close();
       } catch (IOException e) {
         e.printStackTrace();
       }
+      System.out.println("Retunerar ordet ."+word+".");
       return word;
 	   }
 
-     
-    
+
+
 
     private static byte[] readCharsFromFile(String filePath, long seek, int chars) throws IOException {
       try {
@@ -140,7 +163,7 @@ public class Konkordans {
       return null;
 	   }
 
-     // Läss in arrayA från fil och retunera arrayen. 
+     // Läss in arrayA från fil och retunera arrayen.
      private static long[] retriveAFromFile() {
        long[] a = new long[30*30*30];
        try
