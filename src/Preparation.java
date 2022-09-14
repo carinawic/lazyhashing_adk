@@ -28,8 +28,8 @@ public class Preparation {
             //RandomAccessFile fileA = new RandomAccessFile("a.txt", "rw");
             // RandomAccessFile fileB1 = new RandomAccessFile("b1.txt", "rw");
             // RandomAccessFile fileB2 = new RandomAccessFile("b2.txt", "rw");
-            RandomAccessFile fileB = new RandomAccessFile("b.txt", "rw");
-            RandomAccessFile fileC = new RandomAccessFile("c.txt", "rw");
+            RandomAccessFile fileB = new RandomAccessFile("b", "rw");
+            RandomAccessFile fileC = new RandomAccessFile("c", "rw");
 
             File file = new File("rawindex.txt");
             Charset charset = StandardCharsets.ISO_8859_1;
@@ -56,8 +56,10 @@ public class Preparation {
                     //System.out.println("nu ska vi hitta hashen för ordet: "+ word);
                     int hashOfWord = helper.getHash(word);
                     //System.out.println("hashen för det ordet är: "+ hashOfWord);
-                    a[hashOfWord] = fileB.getFilePointer();
-
+                    if (a[hashOfWord] == -1) {
+                      // Ny kombination av 3 första bokstäverna
+                      a[hashOfWord] = fileB.getFilePointer();
+                    }
                     // Lägg till ordet och motsvarande förekomst i B
                     fileB.writeChars(word + ' ' + String.valueOf(fileC.getFilePointer()) + '\n');
                 }

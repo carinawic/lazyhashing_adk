@@ -40,7 +40,7 @@ public class Konkordans {
       long index_2_from_a = -1;
       int hashCounter = 1;
 
-      File fileB = new File("b.txt");
+      File fileB = new File("b");
 
       do{
         if (hashedValue + hashCounter > 30*30*30) {
@@ -55,18 +55,22 @@ public class Konkordans {
       // ordet finns innan index_2_from_a, om ordet finns
 
       // binary search between index_1_from_a and index_2_from_a
-      System.out.println("binary search between "+index_1_from_a+" and "+index_2_from_a);
-      int index_in_B = getIndexInB(index_1_from_a, index_2_from_a, completeWord);
+      //System.out.println("binary search between "+index_1_from_a+" and "+index_2_from_a);
+      long index_in_B = getIndexInB(index_1_from_a, index_2_from_a, completeWord);
+      System.out.println("finshed binary search");
       if (index_in_B == -1) {
         System.out.println("Ordet " + completeWord + " existerar inte i texten :(");
         return;
       }
+
+      System.out.println("found word ."+completeWord+". at ."+index_in_B+".");
     }
 
     // Hitta ordet 'word' some finns tidigast på plats 'index1' och innan plats 'index2' om den finns.
     // Om ordet inte finns, retunera '-1'.
-    private static int getIndexInB(long index1, long index2, String word) {
-      if (index1 > index2) {
+    private static long getIndexInB(long index1, long index2, String word) {
+      System.out.println("binary search between "+index1+" and "+index2);
+      if (index1 >= index2) {
         return -1;
       }
 
@@ -79,31 +83,26 @@ public class Konkordans {
       int compare = word_at_mid.compareTo(word);
       System.out.println("we compare " +word_at_mid+ " to " +word+ " value is: " +compare);
 
-      
-      int compareManually = "abc".compareTo("abc");
-      System.out.println("we compare abc to abc value is: " + compareManually);
-
-      // if (word_at_mid.equals(word)) {
-      //   // hittat ordet
-      //   System.out.println("hittat " + word + " pa plats " + mid);
-      //   return mid;
-      // } else if (compare < 0) {
-      //   System.out.println("ordet " + word + " ar efter " + mid);
-      //   return getIndexInB(mid+8, index2, word);
-      // } else if (compare > 0) {
-      //   System.out.println("ordet " + word + " ar fore " + mid);
-      //   return getIndexInB(index1, mid-8, word);
-      // }
-      // // ska aldrig komma hit.
-      // return -1;
-
+      if (compare == 0) {
+        // hittat ordet
+        System.out.println("hittat " + word + " pa plats " + mid);
+        return mid;
+      } else if (compare < 0) {
+        System.out.println("ordet " + word + " ar efter " + mid);
+        return getIndexInB(mid+1, index2, word);
+      } else if (compare > 0) {
+        System.out.println("ordet " + word + " ar fore " + mid);
+        return getIndexInB(index1, mid, word);
+      }
+      // ska aldrig komma hit.
       return -1;
     }
 
     private static String getWordFromB(long seek) {
+      //System.out.println("Getting word at: "+seek);
       String word = "";
       try {
-        RandomAccessFile file = new RandomAccessFile("b.txt", "r");
+        RandomAccessFile file = new RandomAccessFile("b", "r");
         long fileLength = file.length();
 
         // Hitta början av ordet.
@@ -119,7 +118,7 @@ public class Konkordans {
           file.read(bytes);
 
           readChar = (char) bytes[0];
-          //System.out.println("we check whether " + readChar + " is a newline symbol");
+          //System.out.println("we check whether ." +readChar+ ". at "+seek+" is a newline symbol");
 
           seek--;
         }
@@ -143,14 +142,14 @@ public class Konkordans {
           byte[] bs = new byte[1];
           file.read(bs);
           readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
-          System.out.println("-" + readChar + "-");
+          //System.out.println("-" + readChar + "-");
 
           seek++;
           file.seek(seek);
-          
+
           file.read(bs);
           readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
-          System.out.println("." + readChar + ".");
+          //System.out.println("." + readChar + ".");
 
 
           //readChar = (char) bytes[0];
