@@ -2,6 +2,8 @@ import java.io.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 //import org.apache.commons.lang3.StringUtils;
 
@@ -77,6 +79,10 @@ public class Konkordans {
       int compare = word_at_mid.compareTo(word);
       System.out.println("we compare " +word_at_mid+ " to " +word+ " value is: " +compare);
 
+      
+      int compareManually = "abc".compareTo("abc");
+      System.out.println("we compare abc to abc value is: " + compareManually);
+
       // if (word_at_mid.equals(word)) {
       //   // hittat ordet
       //   System.out.println("hittat " + word + " pa plats " + mid);
@@ -120,6 +126,7 @@ public class Konkordans {
         seek = seek+2;
 
         // Hitta resten av ordet.
+
         while(true){
           if (seek > fileLength) {
             System.out.println("Fil B tog slut!");
@@ -127,13 +134,29 @@ public class Konkordans {
           }
           file.seek(seek);
 
-          byte[] bytes = new byte[1];
-          file.read(bytes);
+          //byte[] bytes = new byte[2];
+          //byte b = in.readByte();
+          //byte[] bs = new byte[] { b };
+          //String s = new String(bs, "Cp1252"); // Some single byte encoding
 
-          readChar = (char) bytes[0];
+          // readChar = file.readChar();
+          byte[] bs = new byte[1];
+          file.read(bs);
+          readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
+          System.out.println("-" + readChar + "-");
+
+          seek++;
+          file.seek(seek);
+          
+          file.read(bs);
+          readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
+          System.out.println("." + readChar + ".");
+
+
+          //readChar = (char) bytes[0];
           //System.out.println("Read " + readChar + " from B");
           if(readChar == ' ') break;
-          word += new String(bytes);
+          word += readChar;
           seek++;
         }
 
