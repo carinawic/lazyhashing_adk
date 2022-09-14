@@ -38,7 +38,6 @@ public class Konkordans {
       long index_2_from_a = -1;
       int hashCounter = 1;
 
-
       File fileB = new File("b.txt");
 
       do{

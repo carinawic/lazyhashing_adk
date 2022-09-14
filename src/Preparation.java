@@ -25,7 +25,7 @@ public class Preparation {
         Arrays.fill(a, -1);
 
         try {
-            RandomAccessFile fileA = new RandomAccessFile("a.txt", "rw");
+            //RandomAccessFile fileA = new RandomAccessFile("a.txt", "rw");
             // RandomAccessFile fileB1 = new RandomAccessFile("b1.txt", "rw");
             // RandomAccessFile fileB2 = new RandomAccessFile("b2.txt", "rw");
             RandomAccessFile fileB = new RandomAccessFile("b.txt", "rw");
