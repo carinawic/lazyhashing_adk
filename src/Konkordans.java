@@ -62,14 +62,15 @@ public class Konkordans {
         System.out.println("Ordet " + completeWord + " existerar inte i texten :(");
         return;
       }
-
       System.out.println("found word ."+completeWord+". at ."+index_in_B+".");
+
+
     }
 
     // Hitta ordet 'word' some finns tidigast på plats 'index1' och innan plats 'index2' om den finns.
     // Om ordet inte finns, retunera '-1'.
     private static long getIndexInB(long index1, long index2, String word) {
-      System.out.println("binary search between "+index1+" and "+index2);
+      //System.out.println("binary search between "+index1+" and "+index2);
       if (index1 >= index2) {
         return -1;
       }
@@ -81,17 +82,17 @@ public class Konkordans {
       //String word_at_mid = new String(word_at_mid_byte);
 
       int compare = word_at_mid.compareTo(word);
-      System.out.println("we compare " +word_at_mid+ " to " +word+ " value is: " +compare);
+      //System.out.println("we compare " +word_at_mid+ " to " +word+ " value is: " +compare);
 
       if (compare == 0) {
         // hittat ordet
-        System.out.println("hittat " + word + " pa plats " + mid);
+        //System.out.println("hittat " + word + " pa plats " + mid);
         return mid;
       } else if (compare < 0) {
-        System.out.println("ordet " + word + " ar efter " + mid);
+        //System.out.println("ordet " + word + " ar efter " + mid);
         return getIndexInB(mid+1, index2, word);
       } else if (compare > 0) {
-        System.out.println("ordet " + word + " ar fore " + mid);
+        //System.out.println("ordet " + word + " ar fore " + mid);
         return getIndexInB(index1, mid, word);
       }
       // ska aldrig komma hit.
