@@ -28,8 +28,8 @@ public class Preparation {
             //RandomAccessFile fileA = new RandomAccessFile("a.txt", "rw");
             // RandomAccessFile fileB1 = new RandomAccessFile("b1.txt", "rw");
             // RandomAccessFile fileB2 = new RandomAccessFile("b2.txt", "rw");
-            RandomAccessFile fileB = new RandomAccessFile("b", "rw");
-            RandomAccessFile fileC = new RandomAccessFile("c", "rw");
+            RandomAccessFile fileB = new RandomAccessFile("b.txt", "rw");
+            RandomAccessFile fileC = new RandomAccessFile("c.txt", "rw");
 
             File file = new File("rawindex.txt");
             Charset charset = StandardCharsets.ISO_8859_1;

@@ -17,21 +17,21 @@ public class Konkordans {
       }
 
       long[] a = retriveAFromFile();
-      String completerow1 = args[0];
-      int hashedValue = helper.getHash(completerow1);
-      // System.out.println("the hashed value of "+ completerow1+ " is " + hashedValue);
+      String word = args[0];
+      int hashedValue = helper.getHash(word);
+      // System.out.println("the hashed value of "+ word+ " is " + hashedValue);
 
       // get the first row1 hash index
       long index_1_from_a = a[hashedValue];
       // ordet finns tidigast på plats index_1_from_a, om ordet finns
       if (index_1_from_a == -1){
-        System.out.println("Ordet " + completerow1 + " existerar inte i texten :(");
+        System.out.println("Ordet " + word + " existerar inte i texten :(");
         return;
       }
 
       long index_2_from_a = -1;
       int hashCounter = 1;
-      File fileB = new File("b");
+      File fileB = new File("b.txt");
 
       do{
         if (hashedValue + hashCounter > 30*30*30) {
@@ -44,13 +44,13 @@ public class Konkordans {
       // ordet finns innan index_2_from_a, om ordet finns
 
       // binary search between index_1_from_a and index_2_from_a
-      long[] indexes_from_B = getIndexesInB(index_1_from_a, index_2_from_a, completerow1);
+      long[] indexes_from_B = getIndexesInB(index_1_from_a, index_2_from_a, word);
       // System.out.println("finshed binary search");
-      if (indexes_from_B[0] == -1) {
-        System.out.println("Ordet " + completerow1 + " existerar inte i texten :(");
+      if (indexes_from_B == null) {
+        System.out.println("Ordet " + word + " existerar inte i texten :(");
         return;
       }
-      System.out.println("found the occurrence that corresponds to ."+completerow1+". from B to C ."+indexes_from_B[0]+"." + indexes_from_B[1]);
+      System.out.println("found the occurrence that corresponds to ."+word+". from B to C ."+indexes_from_B[0]+"." + indexes_from_B[1]);
 
       // find row1 at index in c
 
@@ -67,8 +67,10 @@ public class Konkordans {
     // Hitta ordet 'row1' some finns tidigast på plats 'index1' och innan plats 'index2' om den finns.
     // Om ordet inte finns, retunera '-1'.
     private static long[] getIndexesInB(long index1, long index2, String word) {
-      //System.out.println("binary search between "+index1+" and "+index2);
+      System.out.println("binary search between "+index1+" and "+index2);
+
       if (index1 >= index2) {
+        System.out.println("REASON FOR NULL IS THIS");
         return null;
       }
 
@@ -84,10 +86,11 @@ public class Konkordans {
       
         return occurrences;
       } else if (compare < 0) {
-      
+        System.out.println(word + " is after " + word1);
         return getIndexesInB(mid+1, index2, word);
       } else if (compare > 0) {
         
+        System.out.println(word + " is before " + word1);
         return getIndexesInB(index1, mid, word);
       }
       // ska aldrig komma hit.
@@ -98,7 +101,7 @@ public class Konkordans {
       String row1 = "";
       String row2 = "";
       try {
-        RandomAccessFile file = new RandomAccessFile("b", "r");
+        RandomAccessFile file = new RandomAccessFile("b.txt", "r");
         long fileLength = file.length();
 
         // Hitta början av ordet.
