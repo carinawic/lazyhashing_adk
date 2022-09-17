@@ -37,6 +37,7 @@ public class Preparation {
             StringBuilder sb = new StringBuilder();
             InputStream in = new FileInputStream(file);
             BufferedReader br = new BufferedReader(new InputStreamReader(in, charset));
+            //FileReader fr = new FileReader();
 
             String line;
 

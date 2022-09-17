@@ -77,19 +77,21 @@ public class Konkordans {
       long mid = (index1 + index2) / 2;
       String[] rows_at_mid = getRowsFromB(mid);
       String word1 = rows_at_mid[0].split(" ")[0]; // row [0] before the space
+      //System.out.println("rows_at_mid: ."+rows_at_mid[0]+".");
+
       int compare = word1.compareTo(word);
 
       if (compare == 0) {
         long[] occurrences = new long[2];
         occurrences[0] = Long.parseLong(rows_at_mid[0].split(" ")[1]); // row [0] after the space
         occurrences[1] = Long.parseLong(rows_at_mid[1].split(" ")[1]); // row [1] after the space
-      
+
         return occurrences;
       } else if (compare < 0) {
         System.out.println(word + " is after " + word1);
         return getIndexesInB(mid+1, index2, word);
       } else if (compare > 0) {
-        
+
         System.out.println(word + " is before " + word1);
         return getIndexesInB(index1, mid, word);
       }
@@ -108,7 +110,8 @@ public class Konkordans {
         char readChar = ' ';
         while(readChar != '\n'){
           if (seek < 0) {
-            seek = 0;
+            System.out.println("Start of file b reached.");
+            seek = -2;
             break;
           }
           file.seek(seek);
@@ -117,6 +120,7 @@ public class Konkordans {
           file.read(bytes);
 
           readChar = (char) bytes[0];
+          System.out.println("char: ."+readChar+".");
 
           seek--;
         }
@@ -143,7 +147,7 @@ public class Konkordans {
           seek++;
           if(readChar == '\n') break;
           row1 += readChar;
-          
+
         }
 
         while(true){ // find row 2
@@ -165,7 +169,7 @@ public class Konkordans {
           seek++;
           if(readChar == '\n') break;
           row2 += readChar;
-          
+
         }
 
         file.close();
