@@ -5,11 +5,15 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Konkordans {
 
     static long lengthOfC;
     static long lengthOfB;
+    static long lengthOfText;
+    static long offset = 30;
+    
 
     public static void main(String [] args) {
 
@@ -22,7 +26,7 @@ public class Konkordans {
       }
 
       long[] a = retriveAFromFile();
-      String word = args[0];
+      String word = args[0].toLowerCase();
       int hashedValue = helper.getHash(word);
       // System.out.println("the hashed value of "+ word+ " is " + hashedValue);
 
@@ -38,9 +42,10 @@ public class Konkordans {
       int hashCounter = 1;
       File fileB = new File("b.txt");
       File fileC = new File("c.txt");
-
+      
       lengthOfB = fileB.length();
       lengthOfC = fileC.length();
+
 
       do{
         if (hashedValue + hashCounter >= 30*30*30) {
@@ -65,10 +70,62 @@ public class Konkordans {
 
       ArrayList<Long> occurrencesInC = getOccurensesFromC(indexes_from_B[0], indexes_from_B[1]);
 
-      if (occurrencesInC.size() > 25) {
+      if (occurrencesInC.size() > 2) { // TODO!!!!!! CHANGE BACK TO 25 ULTRA IMPORTANT!!!
+
+        Scanner scanner = new Scanner(System.in);  
+        System.out.println("Vill du fortfarande printa alla förekomster? y/n");
+
+        String answer = scanner.nextLine().toLowerCase();
+
+        if(answer.equals("n")){
+          System.out.println("we dont want to print");
+          return;
+        }
+      }
+
+      try{
+        RandomAccessFile fileText = new RandomAccessFile("exampletext.txt", "r"); // TODO: CHANGE TO REAL FILE IN SCHOOL!!!
+
+        lengthOfText = fileText.length();
+
+        long startOfLine = 0;
+        long endOfLine = 0;
+        for (Long occurrence : occurrencesInC){
+          //System.out.println("the words before and after byte number " + occurrence);
+          
+          startOfLine = occurrence - offset;
+          if (startOfLine < 0){
+            startOfLine = 0;
+          }
+
+          endOfLine = occurrence + offset + word.length();
+          if (endOfLine > lengthOfText){
+            startOfLine = lengthOfText;
+          }
+
+          byte[] konkordans_for_this_word = new byte[(int)(endOfLine-startOfLine)];
+
+          
+          fileText.seek(startOfLine);
+          fileText.read(konkordans_for_this_word);
+
+          for (byte bit : konkordans_for_this_word){
+            if (bit == '\n'){
+              bit = ' ';
+            }
+            System.out.print((char) bit);
+          }
+          System.out.println();
 
       }
 
+
+
+      } catch (IOException e) {
+          e.printStackTrace();
+      }
+
+     
 
     }
 
