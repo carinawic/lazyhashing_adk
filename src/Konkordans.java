@@ -8,21 +8,22 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Konkordans {
-  """
+  /*
   what to do on ubuntu computer:
   1. change files to correct files
   2. make sure special characters in swedish alphabet works
   3. if fetching occurrences takes too much time, then first calculate and afterwards append to arraylist
   4. stringbuilder instead of string += part
-  """
+  */
 
     static long lengthOfC;
     static long lengthOfB;
     static long lengthOfText;
     static long offset = 30;
-    
+
 
     public static void main(String [] args) {
+      long startTime = System.nanoTime();
 
       Helpers helper = new Helpers();
 
@@ -49,7 +50,7 @@ public class Konkordans {
       int hashCounter = 1;
       File fileB = new File("b.txt");
       File fileC = new File("c.txt");
-      
+
       lengthOfB = fileB.length();
       lengthOfC = fileC.length();
 
@@ -77,9 +78,9 @@ public class Konkordans {
 
       ArrayList<Long> occurrencesInC = getOccurensesFromC(indexes_from_B[0], indexes_from_B[1]);
 
-      if (occurrencesInC.size() > 2) { // TODO!!!!!! CHANGE BACK TO 25 ULTRA IMPORTANT!!!
+      if (occurrencesInC.size() > 25) { // TODO!!!!!! CHANGE BACK TO 25 ULTRA IMPORTANT!!!
 
-        Scanner scanner = new Scanner(System.in);  
+        Scanner scanner = new Scanner(System.in);
         System.out.println("Vill du fortfarande printa alla förekomster? y/n");
 
         String answer = scanner.nextLine().toLowerCase();
@@ -99,7 +100,7 @@ public class Konkordans {
         long endOfLine = 0;
         for (Long occurrence : occurrencesInC){
           //System.out.println("the words before and after byte number " + occurrence);
-          
+
           startOfLine = occurrence - offset;
           if (startOfLine < 0){
             startOfLine = 0;
@@ -112,7 +113,7 @@ public class Konkordans {
 
           byte[] konkordans_for_this_word = new byte[(int)(endOfLine-startOfLine)];
 
-          
+
           fileText.seek(startOfLine);
           fileText.read(konkordans_for_this_word);
 
@@ -132,8 +133,9 @@ public class Konkordans {
           e.printStackTrace();
       }
 
-     
 
+      long endTime = System.nanoTime();
+      System.out.println("Time it took: " + (endTime - startTime)/1000000);
     }
 
     // retunera antalet instanser oa ordet från index1 (inclusive) fram till index2 (exlusive).

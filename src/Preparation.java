@@ -19,6 +19,7 @@ public class Preparation {
 	// }
 
     public static void main(String [ ] args) {
+        long startTime = System.nanoTime();
 
         Helpers helper = new Helpers();
         long[] a = new long[30*30*30];
@@ -89,5 +90,7 @@ public class Preparation {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        long endTime = System.nanoTime();
+        System.out.println("Time it took: " + (endTime - startTime)/1000000);
     }
 }
