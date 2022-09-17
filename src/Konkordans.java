@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Konkordans {
+  """
+  what to do on ubuntu computer:
+  1. change files to correct files
+  2. make sure special characters in swedish alphabet works
+  3. if fetching occurrences takes too much time, then first calculate and afterwards append to arraylist
+  4. stringbuilder instead of string += part
+  """
 
     static long lengthOfC;
     static long lengthOfB;
