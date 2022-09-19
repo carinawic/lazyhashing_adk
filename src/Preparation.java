@@ -31,14 +31,14 @@ public class Preparation {
             // RandomAccessFile fileB2 = new RandomAccessFile("b2.txt", "rw");
             
             //HERE
-            //RandomAccessFile fileB = new RandomAccessFile("/var/tmp/b.txt", "rw");
-            //RandomAccessFile fileC = new RandomAccessFile("/var/tmp/c.txt", "rw");
-            RandomAccessFile fileB = new RandomAccessFile("b.txt", "rw");
-            RandomAccessFile fileC = new RandomAccessFile("c.txt", "rw");
+            RandomAccessFile fileB = new RandomAccessFile("/var/tmp/b.txt", "rw");
+            RandomAccessFile fileC = new RandomAccessFile("/var/tmp/c.txt", "rw");
+            //RandomAccessFile fileB = new RandomAccessFile("b.txt", "rw");
+            //RandomAccessFile fileC = new RandomAccessFile("c.txt", "rw");
             
 
-            // HERE File file = new File("/afs/kth.se/misc/info/kurser/DD2350/adk22/labb1/rawindex.txt");
-            File file = new File("rawindex.txt");
+            File file = new File("/afs/kth.se/misc/info/kurser/DD2350/adk22/labb1/rawindex.txt");
+            // HERE File file = new File("rawindex.txt");
             Charset charset = StandardCharsets.ISO_8859_1;
 
             StringBuilder sb = new StringBuilder();
@@ -59,26 +59,26 @@ public class Preparation {
                 int occurrence = Integer.parseInt(token[1]);
 
                 //System.out.println(word + ", " + occurrence);
-                // om ordet Ã¤r nytt
+                // om ordet är nytt
                 individualWordCounter ++;
                 if (!prevWord.equals(word)){ // we have a new word!!
                     // fixa A
-                    //System.out.println("nu ska vi hitta hashen fÃ¶r ordet: "+ word);
+                    //System.out.println("nu ska vi hitta hashen för ordet: "+ word);
                     fileB.writeChars(' ' + String.valueOf(individualWordCounter) + '\n');
 
                     int hashOfWord = helper.getHash(word);
-                    //System.out.println("hashen fÃ¶r det ordet Ã¤r: "+ hashOfWord);
+                    //System.out.println("hashen för det ordet är: "+ hashOfWord);
                     if (a[hashOfWord] == -1) {
-                      // Ny kombination av 3 fÃ¶rsta bokstÃ¤verna
+                      // Ny kombination av 3 första bokstäverna
                       a[hashOfWord] = fileB.getFilePointer();
                     }
-                    // LÃ¤gg till ordet och motsvarande fÃ¶rekomst i B
+                    // Lägg till ordet och motsvarande förekomst i B
                     
                     fileB.writeChars(word + ' ' + String.valueOf(fileC.getFilePointer()));
                     individualWordCounter = 0;
                 }
 
-                // lÃ¤gg till fÃ¶rekomst i c
+                // lägg till förekomst i c
                 fileC.writeChars(String.valueOf(occurrence) + '\n');
 
                 prevWord = word;
@@ -90,8 +90,8 @@ public class Preparation {
             try
             {
                 //HERE
-                //FileOutputStream fos = new FileOutputStream("/var/tmp/arrayA");
-                FileOutputStream fos = new FileOutputStream("arrayA");
+                FileOutputStream fos = new FileOutputStream("/var/tmp/arrayA");
+                //FileOutputStream fos = new FileOutputStream("arrayA");
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
                 oos.writeObject(a);
                 oos.close();

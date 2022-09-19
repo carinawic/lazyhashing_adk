@@ -1,28 +1,33 @@
+
+import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
+import java.io.*;
+
 public class Helpers{
     
 
     public int charToInt(char ch) {
 
       
-        //System.out.println("char is " + ch);
-
       if (ch == ' ') {
          return 0;
       }
 
+
       if(Character.isLetter(ch)) {
 
-        if ((byte) ch == -27) {
-          //System.out.println("char is a with ring");
+        if (ch == 'å') {
+          System.out.println("char is a with ring");
           return 27;
-        } else if ((byte) ch == -28) {
-          //System.out.println("char is a with two dots");
+        } else if (ch == 'ä') {
+          System.out.println("char is a with two dots");
           return 28;
-        } else if ((byte)ch == -10) {
-          //System.out.println("char is o with dots");
+        } else if (ch == 'ö') {
+          System.out.println("char is o with dots");
           return 29;
         }
       }
+      System.out.println('ö');
 
       
       int value = ((int) ch );
@@ -33,7 +38,15 @@ public class Helpers{
 
     public int getHash(String completeWord){
       // TODO: throw error if empty word
-      completeWord = completeWord.toLowerCase();
+      //completeWord = completeWord.toLowerCase();
+
+      //System.out.println( String.format("\\u%04x", (int) completeWord.charAt(0)) );
+      
+      //String converted = new String(completeWord.getBytes(), StandardCharsets.ISO_8859_1);
+
+      //System.out.println( (byte) converted.charAt(0) );
+      
+
       //System.out.println(completeWord);
       // if (completeWord.length() < 3) {
       //   completeWord = StringUtils.rightPad(completeWord, 3, " ");
@@ -43,7 +56,7 @@ public class Helpers{
       } else if (completeWord.length() == 2) {
         completeWord = completeWord + " ";
       }
-      //System.out.println("." + completeWord + ".");
+      //System.out.println("." + (byte)completeWord.charAt(0) + ".");
 
       int lazyHashValue = charToInt(completeWord.charAt(0))*900 + charToInt(completeWord.charAt(1))*30 + charToInt(completeWord.charAt(2));
       //System.out.println(lazyHashValue);

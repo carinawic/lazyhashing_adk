@@ -25,6 +25,12 @@ public class Konkordans {
     public static void main(String [] args) {
       long startTime = System.nanoTime();
 
+
+
+      
+
+      //System.out.println((byte)args[0].charAt(0));
+      
       Helpers helper = new Helpers();
 
       // real data: /afs/kth.se/misc/info/kurser/DD2350/adk22/labb1
@@ -32,15 +38,17 @@ public class Konkordans {
         System.out.println("Inget ord angivet.");
         return;
       }
+      
 
       long[] a = retriveAFromFile();
-      String word = args[0].toLowerCase();
+      String word = args[0]; //.toLowerCase();
+      System.out.println(word);
       int hashedValue = helper.getHash(word);
       // System.out.println("the hashed value of "+ word+ " is " + hashedValue);
 
       // get the first row1 hash index
       long index_1_from_a = a[hashedValue];
-      // ordet finns tidigast på plats index_1_from_a, om ordet finns
+      // ordet finns tidigast p? plats index_1_from_a, om ordet finns
       if (index_1_from_a == -1){
         System.out.println("Ordet " + word + " existerar inte i texten :(");
         return;
@@ -48,10 +56,10 @@ public class Konkordans {
 
       long index_2_from_a = -1;
       int hashCounter = 1;
-      // HERE File fileB = new File("/var/tmp/b.txt");
-      //File fileC = new File("/var/tmp/c.txt");
-      File fileB = new File("b.txt");
-      File fileC = new File("c.txt");
+      File fileB = new File("/var/tmp/b.txt");
+      File fileC = new File("/var/tmp/c.txt");
+      //HERE File fileB = new File("b.txt");
+      //File fileC = new File("c.txt");
 
       lengthOfB = fileB.length();
       lengthOfC = fileC.length();
@@ -59,7 +67,7 @@ public class Konkordans {
 
       do{
         if (hashedValue + hashCounter >= 30*30*30) {
-          index_2_from_a = lengthOfB+1;  // längden av b + 1
+          index_2_from_a = lengthOfB+1;  // l?ngden av b + 1
           break;
         }
         index_2_from_a = a[hashedValue + hashCounter];
@@ -85,26 +93,26 @@ public class Konkordans {
 
       
 
-      System.out.println("Det finns "+indexes_from_B[2]+" förekomster av ordet.");
+      System.out.println("Det finns "+indexes_from_B[2]+" f?rekomster av ordet.");
 
       
       if (indexes_from_B[2] > 25) { 
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Vill du fortfarande printa alla förekomster? y/n");
+        System.out.println("Vill du fortfarande printa alla f?rekomster? y/n");
 
         String answer = scanner.nextLine().toLowerCase();
 
         if(answer.equals("n")){
-          System.out.println("we dont want to print");
+          // System.out.println("we dont want to print");
           return;
         }
       }
 
 
       try{
-        // HERE RandomAccessFile fileText = new RandomAccessFile("/afs/kth.se/misc/info/kurser/DD2350/adk22/labb1/korpus", "r"); // TODO: CHANGE TO REAL FILE IN SCHOOL!!!
-        RandomAccessFile fileText = new RandomAccessFile("exampletext.txt", "r"); 
+        RandomAccessFile fileText = new RandomAccessFile("/afs/kth.se/misc/info/kurser/DD2350/adk22/labb1/korpus", "r"); 
+        //HERE RandomAccessFile fileText = new RandomAccessFile("exampletext.txt", "r"); 
         lengthOfText = fileText.length();
 
 
@@ -121,8 +129,8 @@ public class Konkordans {
         long endOfLine = 0;
 
         try {
-          // HERE RandomAccessFile file = new RandomAccessFile("/var/tmp/c.txt", "r");
-          RandomAccessFile file = new RandomAccessFile("c.txt", "r");
+          RandomAccessFile file = new RandomAccessFile("/var/tmp/c.txt", "r");
+          // HERE RandomAccessFile file = new RandomAccessFile("c.txt", "r");
 
           while(true){
 
@@ -143,7 +151,7 @@ public class Konkordans {
 
             if(readChar == '\n') {
               
-              // nu har vi siffran, vi ska använda siffran!!
+              // nu har vi siffran, vi ska anv?nda siffran!!
               
               // System.out.println("time to print the line " + siffran);
 
@@ -208,7 +216,7 @@ public class Konkordans {
 
     }
 
-    // Hitta ordet 'row1' some finns tidigast på plats 'index1' och innan plats 'index2' om den finns.
+    // Hitta ordet 'row1' some finns tidigast p? plats 'index1' och innan plats 'index2' om den finns.
     // Om ordet inte finns, retunera '-1'.
     private static long[] getIndexesInB(long index1, long index2, String word) {
       // System.out.println("binary search between "+index1+" and "+index2);
@@ -257,11 +265,11 @@ public class Konkordans {
       String row1 = "";
       String row2 = "";
       try {
-        //HERE RandomAccessFile file = new RandomAccessFile("/var/tmp/b.txt", "r");
-        RandomAccessFile file = new RandomAccessFile("b.txt", "r");
+        RandomAccessFile file = new RandomAccessFile("/var/tmp/b.txt", "r");
+        // HERE RandomAccessFile file = new RandomAccessFile("b.txt", "r");
         long fileLength = file.length();
 
-        // Hitta början av ordet.
+        // Hitta b?rjan av ordet.
         char readChar = ' ';
         while(readChar != '\n'){
           if (seek < 0) {
@@ -351,13 +359,13 @@ public class Konkordans {
       return null;
 	   }
 
-     // Läss in arrayA från fil och retunera arrayen.
+     // L?ss in arrayA fr?n fil och retunera arrayen.
      private static long[] retriveAFromFile() {
        long[] a = new long[30*30*30];
        try
         {
-            // HERE FileInputStream fis = new FileInputStream("/var/tmp/arrayA");
-            FileInputStream fis = new FileInputStream("arrayA");
+            FileInputStream fis = new FileInputStream("/var/tmp/arrayA");
+            // HERE FileInputStream fis = new FileInputStream("arrayA");
             ObjectInputStream ois = new ObjectInputStream(fis);
             a = (long[]) ois.readObject();
             ois.close();
