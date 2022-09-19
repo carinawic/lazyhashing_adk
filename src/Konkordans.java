@@ -29,7 +29,7 @@ public class Konkordans {
 
       // real data: /afs/kth.se/misc/info/kurser/DD2350/adk22/labb1
       if (args.length == 0) {
-        System.err.println("Inget ord angivet.");
+        System.out.println("Inget ord angivet.");
         return;
       }
 
@@ -48,6 +48,8 @@ public class Konkordans {
 
       long index_2_from_a = -1;
       int hashCounter = 1;
+      // HERE File fileB = new File("/var/tmp/b.txt");
+      //File fileC = new File("/var/tmp/c.txt");
       File fileB = new File("b.txt");
       File fileC = new File("c.txt");
 
@@ -72,13 +74,21 @@ public class Konkordans {
         System.out.println("Ordet " + word + " existerar inte i texten :(");
         return;
       }
-      System.out.println("indexes_from_B[0]: "+indexes_from_B[0]+" \nindexes_from_B[1]: " + indexes_from_B[1]);
+      // System.out.println("indexes_from_B[0]: "+indexes_from_B[0]+" \nindexes_from_B[1]: " + indexes_from_B[1]);
 
       // find row1 at index in c
 
-      ArrayList<Long> occurrencesInC = getOccurensesFromC(indexes_from_B[0], indexes_from_B[1]);
 
-      if (occurrencesInC.size() > 25) { // TODO!!!!!! CHANGE BACK TO 25 ULTRA IMPORTANT!!!
+      long endTime1 = System.nanoTime();
+      System.out.println("Time it took: " + (endTime1 - startTime)/1000000);
+
+
+      
+
+      System.out.println("Det finns "+indexes_from_B[2]+" förekomster av ordet.");
+
+      
+      if (indexes_from_B[2] > 25) { 
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Vill du fortfarande printa alla förekomster? y/n");
@@ -91,41 +101,104 @@ public class Konkordans {
         }
       }
 
-      try{
-        RandomAccessFile fileText = new RandomAccessFile("exampletext.txt", "r"); // TODO: CHANGE TO REAL FILE IN SCHOOL!!!
 
+      try{
+        // HERE RandomAccessFile fileText = new RandomAccessFile("/afs/kth.se/misc/info/kurser/DD2350/adk22/labb1/korpus", "r"); // TODO: CHANGE TO REAL FILE IN SCHOOL!!!
+        RandomAccessFile fileText = new RandomAccessFile("exampletext.txt", "r"); 
         lengthOfText = fileText.length();
+
+
+
+        char readChar = ' ';
+        String siffran = "";
+
+        long index = indexes_from_B[0];
+        long index2 = indexes_from_B[1];
+
+        // System.out.println(" we look in C between indexes " + index + " and " + index2);
 
         long startOfLine = 0;
         long endOfLine = 0;
-        for (Long occurrence : occurrencesInC){
-          //System.out.println("the words before and after byte number " + occurrence);
 
-          startOfLine = occurrence - offset;
-          if (startOfLine < 0){
-            startOfLine = 0;
-          }
+        try {
+          // HERE RandomAccessFile file = new RandomAccessFile("/var/tmp/c.txt", "r");
+          RandomAccessFile file = new RandomAccessFile("c.txt", "r");
 
-          endOfLine = occurrence + offset + word.length();
-          if (endOfLine > lengthOfText){
-            startOfLine = lengthOfText;
-          }
-
-          byte[] konkordans_for_this_word = new byte[(int)(endOfLine-startOfLine)];
+          while(true){
 
 
-          fileText.seek(startOfLine);
-          fileText.read(konkordans_for_this_word);
+            file.seek(index);
 
-          for (byte bit : konkordans_for_this_word){
-            if (bit == '\n'){
-              bit = ' ';
+            byte[] bs = new byte[1];
+            file.read(bs);
+            readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
+
+            index++;
+            file.seek(index);
+
+            file.read(bs);
+            readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
+            index++;
+
+
+            if(readChar == '\n') {
+              
+              // nu har vi siffran, vi ska använda siffran!!
+              
+              // System.out.println("time to print the line " + siffran);
+
+              startOfLine = Long.valueOf(siffran) - offset;
+
+
+              if (startOfLine < 0){
+                startOfLine = 0;
+              }
+
+              endOfLine = Long.valueOf(siffran) + offset + word.length();
+
+              if (endOfLine > lengthOfText){
+                endOfLine = lengthOfText;
+              }
+
+
+              byte[] konkordans_for_this_word = new byte[(int)(endOfLine-startOfLine)];
+
+
+              fileText.seek(startOfLine);
+              fileText.read(konkordans_for_this_word);
+
+              for (byte bit : konkordans_for_this_word){
+                if (bit == '\n'){
+                  bit = ' ';
+                }
+                System.out.print((char) bit);
+              }
+              System.out.println();
+
+              siffran = "";
+
+              
+            } else {
+              siffran += readChar;
             }
-            System.out.print((char) bit);
-          }
-          System.out.println();
 
-      }
+
+            if (index >= index2) {
+              // System.out.println("done with everything");
+              break;
+            }
+
+
+
+          }
+          
+        
+          file.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+        
 
 
 
@@ -133,71 +206,12 @@ public class Konkordans {
           e.printStackTrace();
       }
 
-
-      long endTime = System.nanoTime();
-      System.out.println("Time it took: " + (endTime - startTime)/1000000);
-    }
-
-    // retunera antalet instanser oa ordet från index1 (inclusive) fram till index2 (exlusive).
-    public static ArrayList<Long> getOccurensesFromC(long index1, long index2) {
-        if (index1 >= index2) {
-          System.out.println("Fel med index i C.");
-          return null;
-        }
-        char readChar = ' ';
-        String siffran = "";
-        long index = index1;
-        ArrayList<Long> ocurencesInText = new ArrayList<Long>();
-
-        try {
-          RandomAccessFile file = new RandomAccessFile("c.txt", "r");
-
-          while (true) {
-          if (index > lengthOfC) {
-            System.out.println("Filen C tog slut!");
-            break;
-          }
-          file.seek(index);
-
-          byte[] bs = new byte[1];
-          file.read(bs);
-          readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
-
-          index++;
-          file.seek(index);
-
-          file.read(bs);
-          readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
-          index++;
-          if(readChar == '\n') {
-            ocurencesInText.add(Long.valueOf(siffran));
-            siffran = "";
-
-            if (index >= index2) {
-              //System.out.println("Reached index2");
-              break;
-            }
-          } else {
-            siffran += readChar;
-          }
-        }
-          file.close();
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-        System.out.println("Det finns "+ocurencesInText.size()+" förekomster av ordet.");
-
-        for (long el : ocurencesInText) {
-          System.out.println(el);
-        }
-
-        return ocurencesInText;
     }
 
     // Hitta ordet 'row1' some finns tidigast på plats 'index1' och innan plats 'index2' om den finns.
     // Om ordet inte finns, retunera '-1'.
     private static long[] getIndexesInB(long index1, long index2, String word) {
-      System.out.println("binary search between "+index1+" and "+index2);
+      // System.out.println("binary search between "+index1+" and "+index2);
 
       if (index1 >= index2) {
         System.out.println("REASON FOR NULL IS THIS");
@@ -207,27 +221,32 @@ public class Konkordans {
       long mid = (index1 + index2) / 2;
       String[] rows_at_mid = getRowsFromB(mid);
       String word1 = rows_at_mid[0].split(" ")[0]; // row [0] before the space
+
+
       //System.out.println("rows_at_mid[0]: ."+rows_at_mid[0]+".");
       //System.out.println("rows_at_mid[1]: ."+rows_at_mid[1]+".");
 
       int compare = word1.compareTo(word);
 
       if (compare == 0) {
-        long[] occurrences = new long[2];
+        long[] occurrences = new long[3];
         occurrences[0] = Long.parseLong(rows_at_mid[0].split(" ")[1]); // row [0] after the space
-        if (rows_at_mid[1] != "") {
+
+        if (!rows_at_mid[1].replaceAll("[^0-9]", "").equals("")) {
           occurrences[1] = Long.parseLong(rows_at_mid[1].split(" ")[1]); // row [1] after the space
         } else {
           occurrences[1] = lengthOfC+1;
         }
 
+
+        occurrences[2] = Long.parseLong(rows_at_mid[0].split(" ")[2]); // times word occurred
         return occurrences;
       } else if (compare < 0) {
-        System.out.println(word + " is after " + word1);
+        // System.out.println(word + " is after " + word1);
         return getIndexesInB(mid+1, index2, word);
       } else if (compare > 0) {
 
-        System.out.println(word + " is before " + word1);
+        // System.out.println(word + " is before " + word1);
         return getIndexesInB(index1, mid, word);
       }
       // ska aldrig komma hit.
@@ -238,6 +257,7 @@ public class Konkordans {
       String row1 = "";
       String row2 = "";
       try {
+        //HERE RandomAccessFile file = new RandomAccessFile("/var/tmp/b.txt", "r");
         RandomAccessFile file = new RandomAccessFile("b.txt", "r");
         long fileLength = file.length();
 
@@ -245,7 +265,7 @@ public class Konkordans {
         char readChar = ' ';
         while(readChar != '\n'){
           if (seek < 0) {
-            System.out.println("Start of file b reached.");
+            // System.out.println("Start of file b reached.");
             seek = -2;
             break;
           }
@@ -265,7 +285,7 @@ public class Konkordans {
 
         while(true){ // find row 1
           if (seek > fileLength) {
-            System.out.println("Fil B tog slut!");
+            // System.out.println("Fil B tog slut!");
             break;
           }
           file.seek(seek);
@@ -287,7 +307,7 @@ public class Konkordans {
 
         while(true){ // find row 2
           if (seek > fileLength) {
-            System.out.println("Fil B tog slut!");
+            // System.out.println("Fil B tog slut!");
             break;
           }
           file.seek(seek);
@@ -336,6 +356,7 @@ public class Konkordans {
        long[] a = new long[30*30*30];
        try
         {
+            // HERE FileInputStream fis = new FileInputStream("/var/tmp/arrayA");
             FileInputStream fis = new FileInputStream("arrayA");
             ObjectInputStream ois = new ObjectInputStream(fis);
             a = (long[]) ois.readObject();
