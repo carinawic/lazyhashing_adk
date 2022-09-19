@@ -26,9 +26,6 @@ public class Konkordans {
       long startTime = System.nanoTime();
 
 
-
-      
-
       //System.out.println((byte)args[0].charAt(0));
       
       Helpers helper = new Helpers();
@@ -41,8 +38,8 @@ public class Konkordans {
       
 
       long[] a = retriveAFromFile();
-      String word = args[0]; //.toLowerCase();
-      System.out.println(word);
+      String word = args[0].toLowerCase();
+      
       int hashedValue = helper.getHash(word);
       // System.out.println("the hashed value of "+ word+ " is " + hashedValue);
 
@@ -93,13 +90,13 @@ public class Konkordans {
 
       
 
-      System.out.println("Det finns "+indexes_from_B[2]+" f?rekomster av ordet.");
+      System.out.println("Det finns "+indexes_from_B[2]+" förekomster av ordet.");
 
       
       if (indexes_from_B[2] > 25) { 
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Vill du fortfarande printa alla f?rekomster? y/n");
+        System.out.println("Vill du fortfarande printa alla förekomster? y/n");
 
         String answer = scanner.nextLine().toLowerCase();
 
@@ -174,14 +171,19 @@ public class Konkordans {
 
               fileText.seek(startOfLine);
               fileText.read(konkordans_for_this_word);
+              
 
-              for (byte bit : konkordans_for_this_word){
-                if (bit == '\n'){
-                  bit = ' ';
-                }
-                System.out.print((char) bit);
-              }
-              System.out.println();
+              //for (byte bit : konkordans_for_this_word){
+              //  if (bit == '\n'){
+              //    bit = ' ';
+              //  }
+              //  System.out.print((char) bit);
+              //}
+              //System.out.println();
+
+              String converted = new String(konkordans_for_this_word, StandardCharsets.ISO_8859_1);
+              converted = converted.replaceAll("\n"," ").replaceAll("\r"," ");
+              System.out.println(converted);
 
               siffran = "";
 
@@ -222,7 +224,7 @@ public class Konkordans {
       // System.out.println("binary search between "+index1+" and "+index2);
 
       if (index1 >= index2) {
-        System.out.println("REASON FOR NULL IS THIS");
+        //System.out.println("REASON FOR NULL IS THIS");
         return null;
       }
 

@@ -17,18 +17,17 @@ public class Helpers{
       if(Character.isLetter(ch)) {
 
         if (ch == 'å') {
-          System.out.println("char is a with ring");
+          //System.out.println("char is a with ring");
           return 27;
         } else if (ch == 'ä') {
-          System.out.println("char is a with two dots");
+          //System.out.println("char is a with two dots");
           return 28;
         } else if (ch == 'ö') {
-          System.out.println("char is o with dots");
+          //System.out.println("char is o with dots");
           return 29;
         }
       }
-      System.out.println('ö');
-
+    
       
       int value = ((int) ch );
       value = value - 96;
