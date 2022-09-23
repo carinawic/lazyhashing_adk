@@ -21,13 +21,8 @@ public class Konkordans {
     static long lengthOfText;
     static long offset = 30;
 
-
     public static void main(String [] args) {
       long startTime = System.nanoTime();
-
-
-      //System.out.println((byte)args[0].charAt(0));
-      
       Helpers helper = new Helpers();
 
       // real data: /afs/kth.se/misc/info/kurser/DD2350/adk22/labb1
@@ -36,7 +31,6 @@ public class Konkordans {
         return;
       }
       
-
       long[] a = retriveAFromFile();
       String word = args[0].toLowerCase();
       
@@ -80,18 +74,12 @@ public class Konkordans {
         return;
       }
       // System.out.println("indexes_from_B[0]: "+indexes_from_B[0]+" \nindexes_from_B[1]: " + indexes_from_B[1]);
-
       // find row1 at index in c
-
 
       long endTime1 = System.nanoTime();
       System.out.println("Time it took: " + (endTime1 - startTime)/1000000);
 
-
-      
-
       System.out.println("Det finns "+indexes_from_B[2]+" förekomster av ordet.");
-
       
       if (indexes_from_B[2] > 25) { 
 
@@ -106,21 +94,16 @@ public class Konkordans {
         }
       }
 
-
       try{
         RandomAccessFile fileText = new RandomAccessFile("/afs/kth.se/misc/info/kurser/DD2350/adk22/labb1/korpus", "r"); 
         //HERE RandomAccessFile fileText = new RandomAccessFile("exampletext.txt", "r"); 
         lengthOfText = fileText.length();
-
-
 
         char readChar = ' ';
         String siffran = "";
 
         long index = indexes_from_B[0];
         long index2 = indexes_from_B[1];
-
-        // System.out.println(" we look in C between indexes " + index + " and " + index2);
 
         long startOfLine = 0;
         long endOfLine = 0;
@@ -130,7 +113,6 @@ public class Konkordans {
           // HERE RandomAccessFile file = new RandomAccessFile("c.txt", "r");
 
           while(true){
-
 
             file.seek(index);
 
@@ -145,15 +127,9 @@ public class Konkordans {
             readChar = (new String(bs, StandardCharsets.ISO_8859_1)).charAt(0);
             index++;
 
-
             if(readChar == '\n') {
-              
               // nu har vi siffran, vi ska anv?nda siffran!!
-              
-              // System.out.println("time to print the line " + siffran);
-
               startOfLine = Long.valueOf(siffran) - offset;
-
 
               if (startOfLine < 0){
                 startOfLine = 0;
@@ -165,21 +141,10 @@ public class Konkordans {
                 endOfLine = lengthOfText;
               }
 
-
               byte[] konkordans_for_this_word = new byte[(int)(endOfLine-startOfLine)];
-
 
               fileText.seek(startOfLine);
               fileText.read(konkordans_for_this_word);
-              
-
-              //for (byte bit : konkordans_for_this_word){
-              //  if (bit == '\n'){
-              //    bit = ' ';
-              //  }
-              //  System.out.print((char) bit);
-              //}
-              //System.out.println();
 
               String converted = new String(konkordans_for_this_word, StandardCharsets.ISO_8859_1);
               converted = converted.replaceAll("\n"," ").replaceAll("\r"," ");
@@ -187,35 +152,24 @@ public class Konkordans {
 
               siffran = "";
 
-              
             } else {
               siffran += readChar;
             }
-
 
             if (index >= index2) {
               // System.out.println("done with everything");
               break;
             }
-
-
-
           }
           
-        
           file.close();
         } catch (IOException e) {
           e.printStackTrace();
         }
 
-        
-
-
-
       } catch (IOException e) {
           e.printStackTrace();
       }
-
     }
 
     // Hitta ordet 'row1' some finns tidigast p? plats 'index1' och innan plats 'index2' om den finns.
@@ -247,7 +201,6 @@ public class Konkordans {
         } else {
           occurrences[1] = lengthOfC+1;
         }
-
 
         occurrences[2] = Long.parseLong(rows_at_mid[0].split(" ")[2]); // times word occurred
         return occurrences;
@@ -286,7 +239,6 @@ public class Konkordans {
 
           readChar = (char) bytes[0];
           //System.out.println("char: ."+readChar+".");
-
           seek--;
         }
         seek = seek+2;

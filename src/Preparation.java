@@ -11,13 +11,6 @@ import java.io.IOException;  // Import the IOException class to handle errors
 
 public class Preparation {
 
-  // private static void writeData(String filePath, String data, int seek) throws IOException {
-	// 	RandomAccessFile file = new RandomAccessFile(filePath, "rw");
-	// 	file.seek(seek);
-	// 	file.write(data.getBytes());
-	// 	file.close();
-	// }
-
     public static void main(String [ ] args) {
         long startTime = System.nanoTime();
 
@@ -26,10 +19,6 @@ public class Preparation {
         Arrays.fill(a, -1);
 
         try {
-            //RandomAccessFile fileA = new RandomAccessFile("a.txt", "rw");
-            // RandomAccessFile fileB1 = new RandomAccessFile("b1.txt", "rw");
-            // RandomAccessFile fileB2 = new RandomAccessFile("b2.txt", "rw");
-            
             //HERE
             RandomAccessFile fileB = new RandomAccessFile("/var/tmp/b.txt", "rw");
             RandomAccessFile fileC = new RandomAccessFile("/var/tmp/c.txt", "rw");
@@ -80,12 +69,10 @@ public class Preparation {
 
                 // lägg till förekomst i c
                 fileC.writeChars(String.valueOf(occurrence) + '\n');
-
                 prevWord = word;
             }
 
             fileB.writeChars(' ' + String.valueOf(individualWordCounter) + '\n');
-
 
             try
             {
